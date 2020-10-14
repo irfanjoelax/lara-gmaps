@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LokasiController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -32,10 +33,19 @@ Route::get('/register', function () {
     return redirect()->route('login');
 });
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::group(['middleware' => ['auth']], function () {
+    // home
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/profil', [App\Http\Controllers\HomeController::class, 'profil'])->name('profil');
-Route::put('/change-profil/{id}', [App\Http\Controllers\HomeController::class, 'changeProfil'])->name('change.profil');
+    // change profil
+    Route::get('/profil', [App\Http\Controllers\HomeController::class, 'profil'])->name('profil');
+    Route::put('/change-profil/{id}', [App\Http\Controllers\HomeController::class, 'changeProfil'])->name('change.profil');
 
-Route::get('/password-change', [App\Http\Controllers\HomeController::class, 'password']);
-Route::put('/password-change/{id}', [App\Http\Controllers\HomeController::class, 'changePassword'])->name('change.password');
+    // change password
+    Route::get('/password-change', [App\Http\Controllers\HomeController::class, 'password']);
+    Route::put('/password-change/{id}', [App\Http\Controllers\HomeController::class, 'changePassword'])->name('change.password');
+
+    // lokasi route 
+    Route::resource('lokasi', LokasiController::class);
+    Route::get('/lokasi-maps', [App\Http\Controllers\LokasiController::class, 'allMaps'])->name('lokasi.maps');
+});

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lokasi;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,14 +10,10 @@ use Illuminate\Support\Facades\Hash;
 
 class HomeController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index()
     {
-        return view('home');
+        $parsing['countLokasi'] = Lokasi::all()->count();
+        return view('home', $parsing);
     }
 
     public function profil()
